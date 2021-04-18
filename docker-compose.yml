@@ -1,0 +1,41 @@
+version: '3.7'
+
+services:
+  mysql:
+    image: mysql:latest
+    networks: 
+      - internal
+
+  symfony_nginx:
+    container_name: symfony_nginx
+    build: 
+      context: ./docker/back/
+      args: 
+        USERNAME: ${USERNAME}
+        PHP_FPM_USER: ${PHP_FPM_USER}
+        PHP_FPM_GROUP: ${PHP_FPM_GROUP}
+        PHP_FPM_LISTEN_MODE: ${PHP_FPM_LISTEN_MODE}
+        PHP_MEMORY_LIMIT: ${PHP_MEMORY_LIMIT}
+        PHP_MAX_UPLOAD: ${PHP_MAX_UPLOAD}
+        PHP_MAX_FILE_UPLOAD: ${PHP_MAX_FILE_UPLOAD}
+        PHP_MAX_POST: ${PHP_MAX_POST}
+        PHP_DISPLAY_ERRORS: ${PHP_DISPLAY_ERRORS}
+        PHP_DISPLAY_STARTUP_ERRORS: ${PHP_DISPLAY_STARTUP_ERRORS}
+        PHP_ERROR_REPORTING: ${PHP_ERROR_REPORTING}
+        PHP_CGI_FIX_PATHINFO: ${PHP_CGI_FIX_PATHINFO}
+        TIMEZONE: ${TIMEZONE}
+    env_file: .env
+    volumes: 
+      - ./back:/var/www/back
+    ports: 
+      - 80:80
+    networks: 
+      - internal
+
+  react:
+    image: node:lts
+    networks: 
+      - internal
+
+networks: 
+  internal:
