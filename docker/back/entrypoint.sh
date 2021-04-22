@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Symfony already created
+# Symfony project already created
 if [ -f "composer.json" ]; then
     composer install;
     bin/console doctrine:migrations:migrate -n --allow-no-migration;

@@ -9,6 +9,8 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    ports: 
+      - 3306:3306
     networks: 
       - internal
 
@@ -40,9 +42,13 @@ services:
 
   react:
     container_name: docker_react
-    image: node:lts
+    build:
+      context: ./docker/front/
+    env_file: .env
     volumes: 
-      - ./front:/var/www/front
+      - ./front:/home/node/sites/front
+    ports: 
+      - 3000:3000
     networks: 
       - internal
 
