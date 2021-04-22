@@ -12,6 +12,6 @@ else
     fi
 fi
 
-chown -R node:node .
+chown -R node:node .;
 
-npm run start;
+su - node -c "cd $WORKDIR_FRONT && npm run start";

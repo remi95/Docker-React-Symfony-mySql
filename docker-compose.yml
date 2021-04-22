@@ -19,7 +19,8 @@ services:
     build: 
       context: ./docker/back/
       args: 
-        USERNAME: ${USERNAME}
+        BACKEND_URL: ${BACKEND_URL}
+        WORKDIR_BACK: ${WORKDIR_BACK}
         PHP_FPM_USER: ${PHP_FPM_USER}
         PHP_FPM_GROUP: ${PHP_FPM_GROUP}
         PHP_FPM_LISTEN_MODE: ${PHP_FPM_LISTEN_MODE}
@@ -34,7 +35,7 @@ services:
         TIMEZONE: ${TIMEZONE}
     env_file: .env
     volumes: 
-      - ./back:/var/www/back
+      - ./${DIRECTORY_BACK}:${WORKDIR_FRONT}
     ports: 
       - 80:80
     networks: 
@@ -44,9 +45,11 @@ services:
     container_name: docker_react
     build:
       context: ./docker/front/
+      args: 
+        WORKDIR_FRONT: ${WORKDIR_FRONT}
     env_file: .env
     volumes: 
-      - ./front:/home/node/sites/front
+      - ./${DIRECTORY_FRONT}:${WORKDIR_FRONT}
     ports: 
       - 3000:3000
     networks: 

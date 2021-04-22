@@ -2,6 +2,8 @@ FROM alpine
 
 EXPOSE 80
 
+ARG BACKEND_URL
+ARG WORKDIR_BACK
 ARG PHP_FPM_USER
 ARG PHP_FPM_GROUP
 ARG PHP_FPM_LISTEN_MODE
@@ -32,6 +34,8 @@ RUN apk add nginx \
   && mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.orig
 
 COPY ./nginx /etc/nginx
+RUN sed -i "s|server_name.*|server_name ${BACKEND_URL};|i" /etc/nginx/sites-available/admin.conf
+RUN sed -i "s|root /var/www/back/public;|root '${WORKDIR_BACK}/public';|i" /etc/nginx/sites-available/admin.conf
 RUN ln -s /etc/nginx/sites-available/*.conf /etc/nginx/sites-enabled/
 
 # PHP configuration
@@ -98,7 +102,7 @@ RUN wget https://get.symfony.com/cli/installer -O - | bash \
 # Supervisor conf to run Nginx and PHP-FPM 
 COPY ./supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-WORKDIR /var/www/back
+WORKDIR ${WORKDIR_BACK}
 
 COPY ./entrypoint.sh /usr/local/bin/entrypoint
 ENTRYPOINT [ "entrypoint" ]
