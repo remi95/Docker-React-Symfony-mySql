@@ -2,12 +2,18 @@ version: '3.7'
 
 services:
   mysql:
+    container_name: docker_mysql
     image: mysql:latest
+    environment: 
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     networks: 
       - internal
 
   symfony_nginx:
-    container_name: symfony_nginx
+    container_name: docker_nginx
     build: 
       context: ./docker/back/
       args: 
@@ -33,7 +39,10 @@ services:
       - internal
 
   react:
+    container_name: docker_react
     image: node:lts
+    volumes: 
+      - ./front:/var/www/front
     networks: 
       - internal
 
