@@ -36,6 +36,7 @@ RUN apk add nginx \
 COPY ./nginx /etc/nginx
 RUN sed -i "s|server_name.*|server_name ${BACKEND_URL};|i" /etc/nginx/sites-available/admin.conf
 RUN sed -i "s|root .*/public;|root '${WORKDIR_BACK}/public';|i" /etc/nginx/sites-available/admin.conf
+RUN mkdir /etc/nginx/sites-enabled
 RUN ln -s /etc/nginx/sites-available/*.conf /etc/nginx/sites-enabled/
 
 # PHP configuration

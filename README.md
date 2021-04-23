@@ -28,7 +28,7 @@ Docker environment to automatically initialize both **React** & **Symfony** proj
 ## Usage
 
 ```bash
-https://github.com/remi95/Docker-React-Symfony-mySql.git myProject
+git clone https://github.com/remi95/Docker-React-Symfony-mySql.git myProject
 
 cd myProject
 docker-composer up --build
