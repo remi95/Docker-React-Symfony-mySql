@@ -11,9 +11,9 @@
       - [Entrypoint](#entrypoint)
       - [Informations](#informations)
     - [NodeJS container](#nodejs-container)
-    - [Image](#image)
-    - [Entrypoint](#entrypoint-1)
-    - [Informations](#informations-1)
+      - [Image](#image)
+      - [Entrypoint](#entrypoint-1)
+      - [Informations](#informations-1)
     - [MySQL container](#mysql-container)
       - [Image](#image-1)
       - [Informations](#informations-2)
@@ -109,11 +109,11 @@ If you connect to the *docker_nginx* container, you can use the **www-data** use
 
 ### NodeJS container
 
-### Image
+#### Image
 
 This container is based on [Node](https://hub.docker.com/_/node) LTS image. 
 
-### Entrypoint
+#### Entrypoint
 
 When the container start, the `docker/front/entrypoint.sh` file is executed.   
 The first time, it will **install** your React project with or without Typescript, depending on your configuration in `.env` file.   
@@ -124,7 +124,7 @@ You can edit this file, if you don't want to run npm install each time for examp
 
 **Important** : After any edition of configuration file, don't forget to run `docker-compose up --build`.
 
-### Informations 
+#### Informations 
 
 Your React project is running on http://localhost:3000.
 
