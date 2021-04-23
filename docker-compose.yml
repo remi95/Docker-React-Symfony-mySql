@@ -33,9 +33,11 @@ services:
         PHP_ERROR_REPORTING: ${PHP_ERROR_REPORTING}
         PHP_CGI_FIX_PATHINFO: ${PHP_CGI_FIX_PATHINFO}
         TIMEZONE: ${TIMEZONE}
+    depends_on:
+      - mysql
     env_file: .env
     volumes: 
-      - ./${DIRECTORY_BACK}:${WORKDIR_FRONT}
+      - ./${DIRECTORY_BACK}:${WORKDIR_BACK}
     ports: 
       - 80:80
     networks: 

@@ -35,7 +35,7 @@ RUN apk add nginx \
 
 COPY ./nginx /etc/nginx
 RUN sed -i "s|server_name.*|server_name ${BACKEND_URL};|i" /etc/nginx/sites-available/admin.conf
-RUN sed -i "s|root /var/www/back/public;|root '${WORKDIR_BACK}/public';|i" /etc/nginx/sites-available/admin.conf
+RUN sed -i "s|root .*/public;|root '${WORKDIR_BACK}/public';|i" /etc/nginx/sites-available/admin.conf
 RUN ln -s /etc/nginx/sites-available/*.conf /etc/nginx/sites-enabled/
 
 # PHP configuration
@@ -70,14 +70,14 @@ RUN apk add php8 \
   && apk add php8-tokenizer \
   && apk add php8-simplexml \
   && apk add php8-xml 
-# Edit www.conf with ENV vars
+## Edit www.conf with ENV vars
 RUN sed -i "s|;listen.owner\s*=\s*nobody|listen.owner = ${PHP_FPM_USER}|g" /etc/php8/php-fpm.d/www.conf \
   && sed -i "s|;listen.group\s*=\s*nobody|listen.group = ${PHP_FPM_GROUP}|g" /etc/php8/php-fpm.d/www.conf \
   && sed -i "s|;listen.mode\s*=\s*0660|listen.mode = ${PHP_FPM_LISTEN_MODE}|g" /etc/php8/php-fpm.d/www.conf \
   && sed -i "s|user\s*=\s*nobody|user = ${PHP_FPM_USER}|g" /etc/php8/php-fpm.d/www.conf \
   && sed -i "s|group\s*=\s*nobody|group = ${PHP_FPM_GROUP}|g" /etc/php8/php-fpm.d/www.conf \
   && sed -i "s|;log_level\s*=\s*notice|log_level = notice|g" /etc/php8/php-fpm.d/www.conf
-# Edit php.ini with ENV vars
+## Edit php.ini with ENV vars
 RUN sed -i "s|display_errors\s*=\s*Off|display_errors = ${PHP_DISPLAY_ERRORS}|i" /etc/php8/php.ini \
   && sed -i "s|display_startup_errors\s*=\s*Off|display_startup_errors = ${PHP_DISPLAY_STARTUP_ERRORS}|i" /etc/php8/php.ini \
   && sed -i "s|error_reporting\s*=\s*E_ALL & ~E_DEPRECATED & ~E_STRICT|error_reporting = ${PHP_ERROR_REPORTING}|i" /etc/php8/php.ini \
@@ -86,11 +86,13 @@ RUN sed -i "s|display_errors\s*=\s*Off|display_errors = ${PHP_DISPLAY_ERRORS}|i"
   && sed -i "s|;*max_file_uploads =.*|max_file_uploads = ${PHP_MAX_FILE_UPLOAD}|i" /etc/php8/php.ini \
   && sed -i "s|;*post_max_size =.*|post_max_size = ${PHP_MAX_POST}|i" /etc/php8/php.ini \
   && sed -i "s|;*cgi.fix_pathinfo=.*|cgi.fix_pathinfo= ${PHP_CGI_FIX_PATHINFO}|i" /etc/php8/php.ini
-# Timezone conf
+## Timezone conf
 RUN apk add tzdata \
   && cp /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
   && echo "${TIMEZONE}" > /etc/timezone \
   && sed -i "s|;*date.timezone =.*|date.timezone = ${TIMEZONE}|i" /etc/php8/php.ini
+## PHP8 on Alpine doesn't set the php env, only php8
+RUN ln -s /usr/bin/php8 /usr/bin/php
 
 # Composer install
 RUN curl -sS https://getcomposer.org/installer | php8 -- --install-dir=/usr/local/bin --filename=composer 
